@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 import { Card, CardLabel, Eyebrow, PageTitle, Grad, Field, Input, Notice, BtnRow, Btn, Grid2 } from "./ui";
-import { LOOP_ZIPS } from "@/lib/plans";
+import { isValidChicagoZip, getNeighborhood } from "@/lib/chicago-zips";
 import type { FormState } from "@/types";
 
 const LOOP_ZIP_LIST = ["60601","60602","60603","60604","60605","60606","60607","60611","60616","60661"];
@@ -17,12 +17,14 @@ export default function StepWelcome({ form, patch, onNext }: Props) {
   const [err, setErr] = useState("");
 
   const zipStatus = form.zip.length === 5
-    ? LOOP_ZIPS.has(form.zip) ? "ok" : "bad"
+    ? isValidChicagoZip(form.zip) ? "ok" : "bad"
     : null;
+  
+  const neighborhood = form.zip.length === 5 && zipStatus === "ok" ? getNeighborhood(form.zip) : null;
 
   const handleNext = () => {
-    if (!LOOP_ZIPS.has(form.zip)) {
-      setErr("Please enter a valid Chicago Loop ZIP code to continue.");
+    if (!isValidChicagoZip(form.zip)) {
+      setErr("Please enter a valid Chicago ZIP code to continue.");
       return;
     }
     setErr("");
@@ -34,12 +36,12 @@ export default function StepWelcome({ form, patch, onNext }: Props) {
       {/* Hero */}
       <div className="hero-bg rounded-2xl p-12 mb-7 text-center relative overflow-hidden">
         <div className="absolute right-0 top-0 text-[120px] opacity-[0.07] pointer-events-none select-none leading-none">🌬</div>
-        <Eyebrow>🏙 Chicago Loop Exclusive</Eyebrow>
+        <Eyebrow>Chicago-Wide Savings</Eyebrow>
         <PageTitle>
           Stop Overpaying<br />on <Grad>Your Bills</Grad>
         </PageTitle>
         <p className="text-base text-gray-500 max-w-sm mx-auto mb-6 leading-relaxed">
-          WindyWallet finds cheaper alternatives for your mobile, internet, transit, and insurance — Loop-only.
+          WindyWallet finds cheaper alternatives for your mobile, internet, transit, and insurance across all Chicago neighborhoods.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {["📱 Mobile","📡 Internet","🚇 Transit","🛡 Insurance"].map(t => (
@@ -52,7 +54,7 @@ export default function StepWelcome({ form, patch, onNext }: Props) {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-7">
-        {[["$312","Avg. Monthly Savings"],["10","Loop ZIP Codes"],["4","Bill Categories"]].map(([v, l]) => (
+        {[["$312","Avg. Monthly Savings"],["55+","Chicago ZIP Codes"],["4","Bill Categories"]].map(([v, l]) => (
           <div key={l} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 text-center">
             <div className="font-display text-3xl font-extrabold tracking-tight grad-text mb-1">{v}</div>
             <div className="text-xs text-gray-400 font-medium">{l}</div>

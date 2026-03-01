@@ -1,7 +1,7 @@
 // src/app/api/analyze/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { LOOP_ZIPS } from "@/lib/plans";
+import { CHICAGO_ZIPS_SET } from "@/lib/plans";
 import { calcDiscountMultiplier, analyzeMobile, analyzeInternet, analyzeTransit, analyzeInsurance } from "@/lib/engine";
 import type { Category } from "@/types";
 
@@ -51,9 +51,9 @@ export async function POST(req: NextRequest) {
 
     const { zip, categories, bills, discounts, childCount } = parsed.data;
 
-    if (!LOOP_ZIPS.has(zip)) {
+    if (!CHICAGO_ZIPS_SET.has(zip)) {
       return NextResponse.json(
-        { error: `ZIP ${zip} is outside the Chicago Loop. WindyWallet is Loop-exclusive.` },
+        { error: `ZIP ${zip} is not a recognized Chicago ZIP code.` },
         { status: 400 }
       );
     }

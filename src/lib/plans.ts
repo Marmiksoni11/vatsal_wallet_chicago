@@ -1,10 +1,14 @@
 // src/lib/plans.ts
 // All internal curated datasets — real 2024 Chicago Loop market pricing
 
+import { ALL_CHICAGO_ZIP_CODES } from "./chicago-zips";
+
 export const LOOP_ZIPS = new Set([
   "60601","60602","60603","60604","60605",
   "60606","60607","60611","60616","60661",
 ]);
+
+export const CHICAGO_ZIPS_SET = new Set(ALL_CHICAGO_ZIP_CODES);
 
 // ── Mobile ───────────────────────────────────────────────────
 export interface MobilePlan {

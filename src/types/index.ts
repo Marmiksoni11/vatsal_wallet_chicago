@@ -87,6 +87,31 @@ export interface AnalyzeResponse {
   results: ComparisonResult[];
 }
 
+// ── Vendor types ──────────────────────────────────────────────
+export interface VendorOffer {
+  id: string;
+  title: string;
+  description: string;
+  discountPct: number | null;
+  discountAmt: number | null;
+  code: string;
+  isActive: boolean;
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  neighborhood: string;
+  zipCode: string;
+  isLocal: boolean;
+  isPromoted: boolean;
+  website: string;
+  phone: string;
+  offers: VendorOffer[];
+}
+
 // ── Form state ───────────────────────────────────────────────
 export interface FormState {
   zip: string;
