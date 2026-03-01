@@ -18,3 +18,85 @@ model Submission {
   optimizedCount Int      @default(0)
   createdAt      DateTime @default(now())
 }
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  name          String         @default("")
+  role          String         @default("user")
+  createdAt     DateTime       @default(now())
+  walletEntries WalletEntry[]
+  analyses      Analysis[]
+  claimedOffers ClaimedOffer[]
+}
+
+model Analysis {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id])
+  zip           String
+  categories    String
+  discounts     String
+  selectedPlans String   @default("[]")
+  totalSavings  Float    @default(0)
+  annualSavings Float    @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model WalletEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  category    String
+  prevCost    Float
+  newCost     Float
+  monthlySave Float
+  planName    String
+  provider    String
+  createdAt   DateTime @default(now())
+}
+
+model Vendor {
+  id           String   @id @default(cuid())
+  name         String
+  category     String
+  description  String   @default("")
+  address      String   @default("")
+  zipCode      String   @default("")
+  neighborhood String   @default("")
+  isLocal      Boolean  @default(true)
+  isPromoted   Boolean  @default(false)
+  website      String   @default("")
+  phone        String   @default("")
+  logoUrl      String   @default("")
+  approved     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  offers       Offer[]
+}
+
+model Offer {
+  id          String         @id @default(cuid())
+  vendorId    String
+  vendor      Vendor         @relation(fields: [vendorId], references: [id])
+  title       String
+  description String         @default("")
+  discountPct Float?
+  discountAmt Float?
+  code        String         @default("")
+  expiresAt   DateTime?
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  claimedBy   ClaimedOffer[]
+}
+
+model ClaimedOffer {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  offerId   String
+  offer     Offer    @relation(fields: [offerId], references: [id])
+  claimedAt DateTime @default(now())
+
+  @@unique([userId, offerId])
+}
